@@ -67,6 +67,22 @@ module Pedant
     create_platform
     config.pedant_platform.before_configure_rspec
 
+    puts "======SEARCH DEBUGGING===="
+    uri = URI.parse("https://localhost/_status")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    req = Net::HTTP::Get.new(uri.request_uri)
+    resp = http.request(req)
+    puts "Chef Server status:"
+    puts resp.body
+
+    puts "Search URL: #{Pedant::Config.search_server}#{Pedant::Config.search_url_fmt}"
+
+    puts "Solr direct query sleep time: #{Pedant::Config.direct_solr_query_sleep_time}"
+
+    puts "======END SEARCH DEBUGGING===="
+
     puts "Starting Pedant Run: #{config.pedant_platform.pedant_run_timestamp}"
     configure_rspec
   end
